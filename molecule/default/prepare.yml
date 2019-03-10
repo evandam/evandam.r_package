@@ -1,0 +1,31 @@
+- name: Setup image for testing
+  hosts: all
+  vars:
+    conda_home: /opt/conda
+  environment:
+    PATH: "{{conda_home}}/bin:{{ansible_env.PATH}}"
+  roles:
+    - evandam.conda
+  tasks:
+    - name: Install OS dependencies
+      package:
+        name:
+          - bzip2
+          - python-setuptools
+    - name: Download miniconda installer
+      get_url:
+        url: "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+        dest: /tmp/miniconda.sh
+    - name: Install miniconda
+      command: bash /tmp/miniconda.sh -b -p {{conda_home}}
+      args:
+        creates: "{{conda_home}}"
+    - name: Install R-base
+      conda:
+        name: r-base
+    - name: Install python dependencies
+      pip:
+        name:
+          - numpy
+          - rpy2
+        executable: "{{conda_home}}/bin/pip"

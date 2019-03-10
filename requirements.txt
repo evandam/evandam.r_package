@@ -1,0 +1,5 @@
+rpy2
+ansible
+molecule
+docker
+pylint

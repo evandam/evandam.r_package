@@ -1,0 +1,23 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: evandam.r_package
+  environment:
+    PATH: "/opt/conda/bin:{{ansible_env.PATH}}"
+    R_HOME: /opt/conda/lib/R
+  vars:
+    ansible_python_interpreter: /opt/conda/bin/python
+  tasks:
+    - name: Install some packages
+      r_package:
+        name:
+          - base
+          - dplyr
+        state: present
+    - name: Remove some packages
+      r_package:
+        name:
+          - dplyr
+          - tidyr
+        state: absent
