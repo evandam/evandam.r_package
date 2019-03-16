@@ -4,10 +4,6 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
-import os
-import json
-from tempfile import gettempdir
-from tempfile import NamedTemporaryFile as TempFile
 from ansible.module_utils.basic import AnsibleModule
 from rpy2 import robjects
 from rpy2.robjects.packages import importr
@@ -49,7 +45,7 @@ class RInterface(object):
         """
         if not self.require(name, lib):
             return False
-        elif version is not None:
+        if version is not None:
             installed_version = self.package_version(name, lib)
             return version == installed_version[:len(version)]
         return True
@@ -174,10 +170,10 @@ def run_module():
             if not module.check_mode:
                 try:
                     install_packages(R, absent_packages,
-                                    type=package_type,
-                                    repos=repos,
-                                    lib=lib,
-                                    Ncpus=ncpus)
+                                     type=package_type,
+                                     repos=repos,
+                                     lib=lib,
+                                     Ncpus=ncpus)
                 except ValueError as e:
                     module.fail_json(msg=str(e))
             result['changed'] = True
