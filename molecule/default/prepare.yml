@@ -7,11 +7,26 @@
   roles:
     - evandam.conda
   tasks:
-    - name: Install OS dependencies
+    - name: Install common OS dependencies
       package:
         name:
           - bzip2
           - python-setuptools
+          - make
+          - gcc
+    - name: Install dependencies for Debian (for devtools)
+      package:
+        name:
+          - zlib-dev
+          - libssl-dev
+      when: ansible_os_family == 'Debian'
+    - name: Install dependencies for RedHat (for devtools)
+      package:
+        name:
+          - zlib-devel
+          - openssl-devel
+      when: ansible_os_family == 'RedHat'
+
     - name: Download miniconda installer
       get_url:
         url: "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"

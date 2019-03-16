@@ -4,20 +4,54 @@
   roles:
     - role: evandam.r_package
   environment:
-    PATH: "/opt/conda/bin:{{ansible_env.PATH}}"
     R_HOME: /opt/conda/lib/R
   vars:
     ansible_python_interpreter: /opt/conda/bin/python
   tasks:
+    - name: Try to install a bad package
+      r_package:
+        name: fakepackage2132352
+        state: present
+      ignore_errors: true
+      register: bad_package
+    - assert:
+        that: bad_package is failed
+
+    - name: Install devtools
+      r_package:
+        name: devtools
+
+    - name: Install a specific version of a package
+      r_package:
+        name: dplyr
+        version: 0.8.0
+
     - name: Install some packages
       r_package:
         name:
           - base
           - dplyr
         state: present
+
     - name: Remove some packages
       r_package:
         name:
           - dplyr
           - tidyr
+        state: absent
+
+    - name: Make a library location for new packages
+      file:
+        path: /tmp/R
+        state: directory
+
+    - name: Install a package into a different library
+      r_package:
+        name: dplyr
+        lib: /tmp/R
+
+    - name: Remove a package from a different library
+      r_package:
+        name: dplyr
+        lib: /tmp/R
         state: absent
