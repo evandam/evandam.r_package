@@ -14,7 +14,8 @@
         state: present
       ignore_errors: true
       register: bad_package
-    - assert:
+    - name: Check that the task failed
+      assert:
         that: bad_package is failed
 
     - name: Install devtools
