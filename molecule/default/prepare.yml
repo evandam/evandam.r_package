@@ -13,32 +13,33 @@
         name:
           - bzip2
           - python-setuptools
-          - make
-          - gcc
-    - name: Install dependencies for Debian (for devtools)
-      package:
-        name:
-          - zlib-dev
-          - libssl-dev
+
+    - name: Install dependencies for Debian
       when: ansible_os_family == 'Debian'
-    - name: Install dependencies for RedHat (for devtools)
       package:
-        name:
-          - zlib-devel
-          - openssl-devel
+        name: []
+
+    - name: Install dependencies for RedHat
       when: ansible_os_family == 'RedHat'
+      package:
+        name: []
 
     - name: Download miniconda installer
       get_url:
         url: "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
         dest: /tmp/miniconda.sh
+
     - name: Install miniconda
       command: bash /tmp/miniconda.sh -b -p {{conda_home}}
       args:
         creates: "{{conda_home}}"
-    - name: Install R-base
+
+    - name: Install R with conda
       conda:
-        name: r-base
+        name:
+          - r-base
+          - r-devtools
+
     - name: Install python dependencies
       pip:
         name:
