@@ -14,16 +14,6 @@
           - bzip2
           - python-setuptools
 
-    - name: Install dependencies for Debian
-      when: ansible_os_family == 'Debian'
-      package:
-        name: []
-
-    - name: Install dependencies for RedHat
-      when: ansible_os_family == 'RedHat'
-      package:
-        name: []
-
     - name: Download miniconda installer
       get_url:
         url: "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
@@ -44,5 +34,4 @@
       pip:
         name:
           - numpy
-          - rpy2
-        executable: "{{conda_home}}/bin/pip"
+          - rpy2==2.8.6

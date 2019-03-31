@@ -6,47 +6,65 @@ A brief description of the role goes here.
 Requirements
 ------------
 
-* Python 3.5+
-  * Ansible must run this version on managed machines.
 * R 3.2+
-* rpy2
-* devtools (if installing specific versions of packages or from GitHub)
-
-
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including
-any variables that are in defaults/main.yml, vars/main.yml, and any variables
-that can/should be set via parameters to the role. Any variables that are read
-from other roles and/or the global scope (ie. hostvars, group vars, etc.) should
-be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in
-regards to parameters that may need to be set for other roles, or variables that
-are used from other roles.
+* rpy2 on target machines
+  * rpy2==2.8.6 if using Python 2
+* R devtools (if installing specific versions of packages)
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables
-passed in as parameters) is always nice for users too:
+```yml
+---
+- name: Test evandam.r_package
+  hosts: all
+  roles:
+    - role: evandam.r_package
+  tasks:
+    - name: Install devtools
+      r_package:
+        name: devtools
+        state: present
 
-    - hosts: servers
-      roles:
-         - { role: evandam.r_package, x: 42 }
+    - name: Install dplyr 0.8.0
+      r_package:
+        name: dplyr
+        version: 0.8.0
+
+    - name: Install a list of packages
+      r_package:
+        name:
+          - dplyr=0.8.0
+          - readr
+          - tidyr
+          - purrr
+
+    - name: Remove a package
+      r_package:
+        name: readr
+        state: absent
+
+    - name: Make a library location for new packages
+      file:
+        path: /tmp/R
+        state: directory
+
+    - name: Install a package into a different library
+      r_package:
+        name: dplyr
+        lib: /tmp/R
+```
+
+To Do:
+------
+* Support installing local packages. Ex:
+```yml
+- r_package:
+    name: foo
+    src: /tmp/foo.tar.gz
+```
 
 License
 -------
 
 BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a
-website (HTML is not allowed).

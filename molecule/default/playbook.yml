@@ -7,7 +7,7 @@
     PATH: "/opt/conda/bin:{{ansible_env.PATH}}"
     R_HOME: /opt/conda/lib/R
   vars:
-    ansible_python_interpreter: /opt/conda/bin/python
+    # ansible_python_interpreter: /opt/conda/bin/python
   tasks:
     - name: Try to install a bad package
       r_package:
