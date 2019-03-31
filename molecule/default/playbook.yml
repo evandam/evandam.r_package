@@ -4,7 +4,7 @@
   roles:
     - role: evandam.r_package
   environment:
-    PATH: "/opt/conda/bin:{{ansible_env.PATH}}"
+    PATH: "/opt/conda/bin:{{ ansible_env.PATH }}"
     R_HOME: /opt/conda/lib/R
   vars:
     ansible_python_interpreter: /opt/conda/bin/python
